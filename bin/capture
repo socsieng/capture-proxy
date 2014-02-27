@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var capture = require('../capture');
+
+program
+    .version('0.0.1')
+    .usage('<applicationRoot> [options]')
+    .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
+    .option('-r, --response', 'Save responses')
+    .option('-R, --request', 'Save requests and responses')
+    .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output');
+
+// if wrap method for commander is available
+if (program.wrap) {
+    program.wrap();
+}
+
+program.on('--help', function () {
+	console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)');
+});
+
+program.parse(process.argv);
+
+var applicationRoot = program.args[0];
+
+if (!applicationRoot) {
+	console.error('No target specified, use the -t or --target option to specify the http endpoint you want to forward requests to');
+	return;
+}
+
+capture.listen(applicationRoot, program.port, {
+	response: program.response,
+	request: program.request,
+	output: program.output
+});
