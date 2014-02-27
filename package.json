@@ -1,0 +1,22 @@
+{
+  "name": "capture-proxy",
+  "version": "0.0.0",
+  "description": "A proxy service that can be used to intercept http requests and persist the request and response payloads",
+  "main": "capture.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "capture",
+    "proxy"
+  ],
+  "author": "socsieng",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/socsieng/capture-proxy.git"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "commander": "~2.0.0"
+  }
+}
