@@ -32,5 +32,5 @@ if (!applicationRoot) {
 capture.listen(applicationRoot, program.port, {
 	response: program.response,
 	request: program.request,
-	output: program.output
+	output: require('path').resolve(process.cwd(), program.output)
 });

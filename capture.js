@@ -6,15 +6,15 @@ var fs = require('fs');
 var capture = function (appRoot, port, options) {
 	var baseUri = require('url').parse(appRoot);
 	var client = baseUri.protocol === 'https:' ? https : http;
-	var outputLocation = require('path').resolve(options.output);
+	var outputLocation = options.output;
 
 	var proxy = http.createServer(function (req, res) {
 		var reqStream = null, resStream = null;
 		if (options.response || options.request) {
-			resStream = fs.createWriteStream(outputLocation, getFileName(req, 'response'));
+			resStream = fs.createWriteStream(getFileName(outputLocation, req, 'response'));
 		}
 		if (options.request) {
-			reqStream = fs.createWriteStream(outputLocation, getFileName(req, 'request'));
+			reqStream = fs.createWriteStream(getFileName(outputLocation, req, 'request'));
 		}
 		routeRequest(req, res, reqStream, resStream);
 	});
@@ -74,7 +74,7 @@ var capture = function (appRoot, port, options) {
 
 	// create output folder
 	if (options.response || options.request) {
-		ensurePath(options.output);
+		ensurePath(outputLocation);
 	}
 
 	proxy.listen(port, 'localhost');
@@ -87,16 +87,15 @@ var combinePaths = function () {
 }
 
 var ensurePath = function (path) {
-	var fullPath = require('path').resolve(path);
-	var parts = fullPath.split(require('path').sep);
-	var currentPath = '';
-
-	parts.forEach(function (folder) {
-		currentPath = require('path').resolve(currentPath, folder);
-		if (!fs.existsSync(currentPath)) {
-			fs.mkdirSync(currentPath);
+	var parts = path.split(require('path').sep);
+	for (var i = 1; i <= parts.length; i++) {
+		var folder = parts.slice(0, i).join(require('path').sep);
+		if (folder) {
+			if (!fs.existsSync(folder)) {
+				fs.mkdirSync(folder);
+			}
 		}
-	});
+	}
 }
 
 var getFileName = function (root, req, type) {
