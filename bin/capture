@@ -17,7 +17,7 @@ if (program.wrap) {
 }
 
 program.on('--help', function () {
-	console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)');
+	console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)\n');
 });
 
 program.parse(process.argv);
@@ -25,8 +25,8 @@ program.parse(process.argv);
 var applicationRoot = program.args[0];
 
 if (!applicationRoot) {
-	console.error('No target specified, use the -t or --target option to specify the http endpoint you want to forward requests to');
-	return;
+	console.error('No <applicationRoot> specified.');
+	program.help();
 }
 
 capture.listen(applicationRoot, program.port, {
