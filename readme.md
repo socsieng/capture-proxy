@@ -56,11 +56,9 @@ Sometimes fiddler isn't an option. This is a very crude and basic alternative to
 * Doesn't do anything meaningful with `gzip` encoding
 * It will handle basic web page requests however static resource references are still a problem
 * Ignores all SSL errors
-* No unit tests
 
 ## Coming up
 
 * Option to disable `gzip` compression
 * Option to enable/disable SSL validation
 * Running the proxy under `https`
-* Unit tests

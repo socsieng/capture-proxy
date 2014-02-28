@@ -1,13 +1,13 @@
 {
   "name": "capture-proxy",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A proxy service that can be used to intercept http requests and persist the request and response payloads",
   "main": "capture.js",
   "bin": {
     "capture": "./bin/capture"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -R spec tests"
   },
   "keywords": [
     "capture",
@@ -21,5 +21,10 @@
   "license": "ISC",
   "dependencies": {
     "commander": "~2.0.0"
+  },
+  "devDependencies": {
+    "sinon": "^1.8.2",
+    "expect.js": "^0.3.1",
+    "memory-streams": "0.0.3"
   }
 }
