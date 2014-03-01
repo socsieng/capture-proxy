@@ -41,7 +41,7 @@ module.exports = function (grunt) {
             },
             src: {
                 files: '<%=src%>',
-                tasks: ['default']
+                tasks: ['build']
             },
             tests: {
                 files: '<%=tests%>',
