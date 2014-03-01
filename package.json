@@ -1,7 +1,7 @@
 {
   "name": "capture-proxy",
-  "version": "0.0.10",
-  "description": "A proxy service that can be used to intercept http requests and persist the request and response payloads",
+  "version": "0.1.0",
+  "description": "A http proxy that can be used to intercept http requests and persist the request and response payloads.",
   "main": "index.js",
   "bin": {
     "capture": "./bin/capture"

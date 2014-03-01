@@ -3,13 +3,14 @@
 var program = require('commander');
 var capture = require('../index');
 
-program.version('0.0.11')
+program.version('0.1.0') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
     .option('-R, --request', 'Save requests and responses')
     .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output')
     .option('-k, --insecure', 'Allow connections to SSL sites without valid certs')
+    .option('-z, --zip', 'Enable compression. By default the `accept-encoding` header is removed')
     ;
 
 // use if wrap method for commander is available
@@ -18,7 +19,7 @@ if (program.wrap) {
 }
 
 program.on('--help', function () {
-    console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)\n');
+    console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads.\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)\n');
 });
 
 program.parse(process.argv);
@@ -34,5 +35,6 @@ capture.listen(applicationRoot, program.port, {
     response: program.response,
     request: program.request,
     output: require('path').resolve(process.cwd(), program.output),
-    insecure: program.insecure
+    insecure: program.insecure,
+    zip: program.zip
 });

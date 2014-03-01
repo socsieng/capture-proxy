@@ -163,9 +163,9 @@ describe('connect', function () {
     });
 
     describe('requests', function () {
-        function triggerRequest () {
+        function triggerRequest (requestHeaders) {
             expect(http.createServer.args[0][0]).to.be.a(Function);
-            http.createServer.args[0][0]({ url: '/', headers: {} });
+            http.createServer.args[0][0]({ url: '/', headers: requestHeaders || {} });
         }
 
         beforeEach(function () {
@@ -208,24 +208,71 @@ describe('connect', function () {
                 listen('http://my.host.com/', port, {});
                 triggerRequest();
 
-                expect(http.request.callCount).to.be(1);
-                expect(http.request.args[0][0]).to.have.property('rejectUnauthorized', true);
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('rejectUnauthorized', true);
             });
 
             it('should send the `rejectUnauthorized: true` property when `insecure: false`', function () {
                 listen('http://my.host.com/', port, { insecure: false });
                 triggerRequest();
 
-                expect(http.request.callCount).to.be(1);
-                expect(http.request.args[0][0]).to.have.property('rejectUnauthorized', true);
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('rejectUnauthorized', true);
             });
 
             it('should send the `rejectUnauthorized: false` property when `insecure: true`', function () {
                 listen('http://my.host.com/', port, { insecure: true });
                 triggerRequest();
 
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('rejectUnauthorized', false);
+            });
+        });
+
+        describe('compression', function () {
+            it('should remove the `accept-encoding` header by default', function () {
+                listen('http://my.host.com/', port, {});
+                triggerRequest({
+                    'accept-encoding': 'gzip,deflate',
+                    'other': 'value'
+                });
+
                 expect(http.request.callCount).to.be(1);
-                expect(http.request.args[0][0]).to.have.property('rejectUnauthorized', false);
+
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('headers');
+                expect(options.headers).to.not.have.property('accept-encoding');
+                expect(options.headers).to.have.property('other');
+            });
+
+            it('should remove the `accept-encoding` header when `zip: false`', function () {
+                listen('http://my.host.com/', port, { zip: false });
+                triggerRequest({
+                    'accept-encoding': 'gzip,deflate',
+                    'other': 'value'
+                });
+
+                expect(http.request.callCount).to.be(1);
+
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('headers');
+                expect(options.headers).to.not.have.property('accept-encoding');
+                expect(options.headers).to.have.property('other');
+            });
+
+            it('should send the `accept-encoding` header when `zip: true`', function () {
+                listen('http://my.host.com/', port, { zip: true });
+                triggerRequest({
+                    'accept-encoding': 'gzip,deflate',
+                    'other': 'value'
+                });
+
+                expect(http.request.callCount).to.be(1);
+
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('headers');
+                expect(options.headers).to.have.property('accept-encoding');
+                expect(options.headers).to.have.property('other');
             });
         });
     });

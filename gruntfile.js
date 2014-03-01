@@ -62,7 +62,7 @@ module.exports = function (grunt) {
         var commandFile = 'bin/capture';
         var packageContents = grunt.file.readJSON('package.json');
         var commandContents = grunt.file.read(commandFile);
-        var exp = /(program\.version\(')([^']+)('\))/;
+        var exp = /(program\.version\(')([^']+)('\) \/\/ automatically updated from package\.json)/;
 
         if (!packageContents.version) {
             grunt.log.error('package.json does not contain version information');

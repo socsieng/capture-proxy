@@ -7,6 +7,7 @@ var path = require('path');
 function listen (appRoot, port, options) {
     var log = null;
     var allowInsecure = options.insecure;
+    var enableZip = options.zip;
     options = options || {};
 
     if (options.silent) {
@@ -82,8 +83,14 @@ function listen (appRoot, port, options) {
             rejectUnauthorized: !allowInsecure
         };
 
-        if (options.headers.host) {
-            options.headers.host = baseUri.host;
+        if (options.headers) {
+            if (!enableZip) {
+                delete options.headers['accept-encoding'];
+            }
+
+            if (options.headers.host) {
+                options.headers.host = baseUri.host;
+            }
         }
 
         // write request headers
