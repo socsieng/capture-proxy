@@ -3,7 +3,7 @@
 var program = require('commander');
 var capture = require('../index');
 
-program.version('0.1.0') // automatically updated from package.json
+program.version('0.1.1') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
