@@ -3,15 +3,14 @@
 var program = require('commander');
 var capture = require('../index');
 
-program
-    .version('0.0.8')
+program.version('0.0.9')
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
     .option('-R, --request', 'Save requests and responses')
     .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output');
 
-// if wrap method for commander is available
+// use if wrap method for commander is available
 if (program.wrap) {
     program.wrap();
 }
