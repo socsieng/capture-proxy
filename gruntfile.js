@@ -46,6 +46,10 @@ module.exports = function (grunt) {
             tests: {
                 files: '<%=tests%>',
                 tasks: ['test']
+            },
+            packagejson: {
+                files: 'package.json',
+                tasks: ['command-version']
             }
         }
     });
@@ -53,6 +57,24 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
+
+    grunt.registerTask('command-version', 'Updates the version of command line interface from package.json file', function() {
+        var commandFile = 'bin/capture';
+        var packageContents = grunt.file.readJSON('package.json');
+        var commandContents = grunt.file.read(commandFile);
+        var exp = /(program\.version\(')([^']+)('\))/;
+
+        if (!packageContents.version) {
+            grunt.log.error('package.json does not contain version information');
+        }
+
+        var match = exp.exec(commandContents);
+        if (match && match[2] !== packageContents.version) {
+            commandContents = commandContents.replace(exp, '$1' + packageContents.version + '$3');
+            grunt.file.write(commandFile, commandContents);
+            grunt.log.ok('command line version updated to: ' + packageContents.version);
+        }
+    });
 
     grunt.registerTask('default', ['jshint']);
     grunt.registerTask('test', ['mochaTest']);
