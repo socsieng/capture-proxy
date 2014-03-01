@@ -1,9 +1,55 @@
 #!/usr/bin/env node
 
-var program = require('commander');
+var program = require('../lib/commander/');
 var capture = require('../index');
 
-program.version('0.1.1') // automatically updated from package.json
+function wrapLine(str, columns) {
+    var wordExp = /([\S]+)(\s*)/g, space = /\s*$/, word, currentLine = '', lines = [];
+
+    if (!str) {
+        return str;
+    }
+    if (str.length <= columns) {
+        return str.replace(space, '');
+    }
+
+    while ((word = wordExp.exec(str))) {
+        if (word[1].length > columns) {
+            // word is too long to fit into current line
+            for (var i = 0; i < word[1].length; i += columns) {
+                currentLine = word[1].substring(i, i + columns);
+                lines.push(currentLine.replace(space, ''));
+                currentLine = '';
+            }
+        } else {
+            if (currentLine.length + word[1].length <= columns) {
+                // new word fits in with current line, also append whitespace
+                currentLine += word[1] + word[2];
+            } else {
+                lines.push(currentLine.replace(space, ''));
+                currentLine = word[1] + word[2];
+            }
+        }
+    }
+
+    if (currentLine) {
+        // add additional lines
+        lines.push(currentLine.replace(space, ''));
+        currentLine = '';
+    }
+    return lines.join('\n');
+}
+
+function wrapText(str, columns) {
+    if (!str) {
+        return str;
+    }
+
+    var lines = str.split('\n');
+    return lines.map(function (l) { return wrapLine(l, columns); }).join('\n');
+}
+
+program.version('0.1.2') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
@@ -19,7 +65,12 @@ if (program.wrap) {
 }
 
 program.on('--help', function () {
-    console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads.\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)\n');
+    var columns = 60;
+    if (require('tty').isatty(process.stdout.fd) && process.stdout.columns >= 60) {
+        columns = process.stdout.columns;
+    }
+    var description = 'Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads.\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)\n';
+    console.log(wrapText(description, columns));
 });
 
 program.parse(process.argv);
