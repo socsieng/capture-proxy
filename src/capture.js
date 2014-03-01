@@ -6,6 +6,7 @@ var path = require('path');
 
 function listen (appRoot, port, options) {
     var log = null;
+    var allowInsecure = options.insecure;
     options = options || {};
 
     if (options.silent) {
@@ -78,7 +79,7 @@ function listen (appRoot, port, options) {
             method: req.method,
             path: combinePaths(baseUri.pathname, req.url),
             headers: req.headers,
-            rejectUnauthorized: false
+            rejectUnauthorized: !allowInsecure
         };
 
         if (options.headers.host) {

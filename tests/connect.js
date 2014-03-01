@@ -74,6 +74,7 @@ describe('connect', function () {
 
     describe('paths', function () {
         var targetFolder, existsStub;
+
         beforeEach(function () {
             existsStub = sinon.stub(fs, 'existsSync');
             sinon.stub(fs, 'mkdirSync');
@@ -157,6 +158,74 @@ describe('connect', function () {
                 expect(fs.mkdirSync.args[0][0]).to.be(targetFolder.slice(0, 2).join(path.sep));
                 expect(fs.mkdirSync.args[1][0]).to.be(targetFolder.slice(0, 3).join(path.sep));
                 expect(fs.mkdirSync.args[2][0]).to.be(targetFolder.slice(0, 4).join(path.sep));
+            });
+        });
+    });
+
+    describe('requests', function () {
+        function triggerRequest () {
+            expect(http.createServer.args[0][0]).to.be.a(Function);
+            http.createServer.args[0][0]({ url: '/', headers: {} });
+        }
+
+        beforeEach(function () {
+            sinon.stub(https, 'request').returns({
+                on: sinon.stub(),
+                end: sinon.stub()
+            });
+
+            sinon.stub(http, 'request').returns({
+                on: sinon.stub(),
+                end: sinon.stub()
+            });
+        });
+
+        afterEach(function () {
+            https.request.restore();
+            http.request.restore();
+        });
+
+        describe('http/https', function () {
+            it('should use the http client when listening to a host with the `http` protocol', function () {
+                listen('http://my.host.com/', port, {});
+                triggerRequest();
+
+                expect(https.request.callCount).to.be(0);
+                expect(http.request.callCount).to.be(1);
+            });
+
+            it('should use the https client when listening to a host with the `https` protocol', function () {
+                listen('https://my.host.com/', port, {});
+                triggerRequest();
+
+                expect(https.request.callCount).to.be(1);
+                expect(http.request.callCount).to.be(0);
+            });
+        });
+
+        describe('rejectUnauthorized', function () {
+            it('should send the `rejectUnauthorized: true` property by default', function () {
+                listen('http://my.host.com/', port, {});
+                triggerRequest();
+
+                expect(http.request.callCount).to.be(1);
+                expect(http.request.args[0][0]).to.have.property('rejectUnauthorized', true);
+            });
+
+            it('should send the `rejectUnauthorized: true` property when `insecure: false`', function () {
+                listen('http://my.host.com/', port, { insecure: false });
+                triggerRequest();
+
+                expect(http.request.callCount).to.be(1);
+                expect(http.request.args[0][0]).to.have.property('rejectUnauthorized', true);
+            });
+
+            it('should send the `rejectUnauthorized: false` property when `insecure: true`', function () {
+                listen('http://my.host.com/', port, { insecure: true });
+                triggerRequest();
+
+                expect(http.request.callCount).to.be(1);
+                expect(http.request.args[0][0]).to.have.property('rejectUnauthorized', false);
             });
         });
     });

@@ -3,12 +3,14 @@
 var program = require('commander');
 var capture = require('../index');
 
-program.version('0.0.10')
+program.version('0.0.11')
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
     .option('-R, --request', 'Save requests and responses')
-    .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output');
+    .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output')
+    .option('-k, --insecure', 'Allow connections to SSL sites without valid certs')
+    ;
 
 // use if wrap method for commander is available
 if (program.wrap) {
@@ -31,5 +33,6 @@ if (!applicationRoot) {
 capture.listen(applicationRoot, program.port, {
     response: program.response,
     request: program.request,
-    output: require('path').resolve(process.cwd(), program.output)
+    output: require('path').resolve(process.cwd(), program.output),
+    insecure: program.insecure
 });
