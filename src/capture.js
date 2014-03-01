@@ -121,6 +121,12 @@ function listen (appRoot, port, options) {
             });
         });
 
+        request.on('error', function (error) {
+            log(util.format('%s - %s', 500, requestUrl));
+            res.writeHead(500);
+            res.end(error ? error.stack : 'Error executing request');
+        });
+
         if (req.method === 'POST') {
             if (reqFileStream) {
                 reqFileStream.write('BODY:\r\n');
