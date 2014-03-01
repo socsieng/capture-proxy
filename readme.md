@@ -1,5 +1,7 @@
 # capture-proxy
 
+[![Build Status](https://travis-ci.org/socsieng/capture-proxy.png)](https://travis-ci.org/socsieng/capture-proxy)
+
 capture-proxy is a basic nodejs proxy that allows you to capture the request and response streams for all requests to a given endpoint.
 
 This is achieved by pointing the application or browser to the capture-proxy which will then forward the request onto the target endpoint.
