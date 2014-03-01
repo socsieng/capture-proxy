@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-var capture = require('../capture');
+var capture = require('../index');
 
 program
-    .version('0.0.1')
+    .version('0.0.8')
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
@@ -17,7 +17,7 @@ if (program.wrap) {
 }
 
 program.on('--help', function () {
-	console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)\n');
+    console.log('Capture is a http proxy that can be used to intercept http requests and persist the request and response payloads\n\n<applicationRoot> is the mounting point for the proxy. (e.g. http://my.host.com/application/root/)\n');
 });
 
 program.parse(process.argv);
@@ -25,12 +25,12 @@ program.parse(process.argv);
 var applicationRoot = program.args[0];
 
 if (!applicationRoot) {
-	console.error('No <applicationRoot> specified.');
-	program.help();
+    console.error('No <applicationRoot> specified.');
+    program.help();
 }
 
 capture.listen(applicationRoot, program.port, {
-	response: program.response,
-	request: program.request,
-	output: require('path').resolve(process.cwd(), program.output)
+    response: program.response,
+    request: program.request,
+    output: require('path').resolve(process.cwd(), program.output)
 });

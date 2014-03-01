@@ -2,12 +2,12 @@
   "name": "capture-proxy",
   "version": "0.0.8",
   "description": "A proxy service that can be used to intercept http requests and persist the request and response payloads",
-  "main": "capture.js",
+  "main": "index.js",
   "bin": {
     "capture": "./bin/capture"
   },
   "scripts": {
-    "test": "mocha -R spec tests"
+    "test": "grunt build"
   },
   "keywords": [
     "capture",
@@ -25,6 +25,10 @@
   "devDependencies": {
     "sinon": "^1.8.2",
     "expect.js": "^0.3.1",
-    "memory-streams": "0.0.3"
+    "memory-streams": "0.0.3",
+    "grunt": "^0.4.2",
+    "grunt-contrib-jshint": "^0.8.0",
+    "grunt-mocha-test": "^0.9.3",
+    "grunt-contrib-watch": "^0.5.3"
   }
 }
