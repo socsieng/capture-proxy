@@ -28,6 +28,7 @@ describe('request/response', function () {
         request.method = method;
         request.url = url;
         request.headers = headers || {};
+        request.httpVersion = '1.1';
 
         if (data) {
             request.push(data);
@@ -42,6 +43,7 @@ describe('request/response', function () {
 
         response.statusCode = statusCode;
         response.headers = headers || {};
+        response.httpVersion = '1.1';
 
         if (data) {
             response.push(data);
@@ -101,10 +103,11 @@ describe('request/response', function () {
     }
 
     before(function () {
+        sinon.stub(fs, 'mkdirSync');
         sinon.stub(proxy, 'listen');
         sinon.stub(http, 'createServer').returns(proxy);
 
-        listen('https://my.host.com/', port, { response: true, request: true, output: './output' });
+        listen('https://my.host.com/root/', port, { response: true, request: true, output: './output' });
 
         expect(http.createServer.args[0][0]).to.be.a(Function);
         triggerRequest = http.createServer.args[0][0];
@@ -113,6 +116,7 @@ describe('request/response', function () {
     after(function () {
         http.createServer.restore();
         proxy.listen.restore();
+        fs.mkdirSync.restore();
     });
 
     describe('GET', function () {
@@ -124,11 +128,9 @@ describe('request/response', function () {
                     var rq = req.toString();
                     var rs = res.toString();
 
-                    expect(rq).to.contain('METHOD: GET');
-                    expect(rq).to.not.contain('HEADERS:');
-                    expect(rq).to.not.contain('BODY:');
+                    expect(rq).to.match(/^GET \/root\/something HTTP\/[\d\.]+\r\n\r\n$/);
 
-                    expect(rs).to.contain('BODY:');
+                    expect(rs).to.match(/^HTTP\/[\d.]+ \d+[^\r]+\r\n\r\nOK$/);
                     expect(rs).to.contain('OK');
 
                     done();
@@ -143,15 +145,10 @@ describe('request/response', function () {
                     var rq = req.toString();
                     var rs = res.toString();
 
-                    expect(rq).to.contain('METHOD: GET');
-                    expect(rq).to.contain('HEADERS:');
+                    expect(rq).to.match(/^GET \/root\/something HTTP\/[\d\.]+\r\na: 1\r\n\r\n$/);
                     expect(rq).to.contain('a: 1');
-                    expect(rq).to.not.contain('BODY:');
 
-                    expect(rs).to.contain('BODY:');
-                    expect(rs).to.contain('HEADERS:');
-                    expect(rs).to.contain('b: 2');
-                    expect(rs).to.contain('OK');
+                    expect(rs).to.match(/^HTTP\/[\d.]+ \d+[^\r]+\r\nb: 2\r\n\r\nOK$/);
 
                     done();
                 });
@@ -167,13 +164,9 @@ describe('request/response', function () {
                     var rq = req.toString();
                     var rs = res.toString();
 
-                    expect(rq).to.contain('METHOD: POST');
-                    expect(rq).to.not.contain('HEADERS:');
-                    expect(rq).to.contain('BODY:');
-                    expect(rq).to.contain('hello=world');
+                    expect(rq).to.match(/^POST \/root\/something HTTP\/[\d\.]+\r\n\r\nhello=world$/);
 
-                    expect(rs).to.contain('BODY:');
-                    expect(rs).to.contain('OK');
+                    expect(rs).to.match(/^HTTP\/[\d.]+ \d+[^\r]+\r\n\r\nOK$/);
 
                     done();
                 });
@@ -187,13 +180,9 @@ describe('request/response', function () {
                     var rq = req.toString();
                     var rs = res.toString();
 
-                    expect(rq).to.contain('METHOD: POST');
-                    expect(rq).to.contain('HEADERS:');
-                    expect(rq).to.contain('BODY:');
-                    expect(rq).to.contain('hello=world');
+                    expect(rq).to.match(/^POST \/root\/something HTTP\/[\d\.]+\r\na: 1\r\n\r\nhello=world$/);
 
-                    expect(rs).to.contain('BODY:');
-                    expect(rs).to.contain('OK');
+                    expect(rs).to.match(/^HTTP\/[\d.]+ \d+[^\r]+\r\n\r\nOK$/);
 
                     done();
                 });

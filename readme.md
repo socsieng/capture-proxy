@@ -62,8 +62,9 @@ Sometimes fiddler isn't an option. This is a very crude and basic alternative to
 ## Issues
 
 * It will handle basic web page requests however static resource references are still a problem
+* Cookie management
+* Redirects
 
 ## TODO
 
-* Save request and response streams in a standard format
 * Running the proxy under `https`

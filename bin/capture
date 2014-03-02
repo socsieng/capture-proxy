@@ -49,7 +49,7 @@ function wrapText(str, columns) {
     return lines.map(function (l) { return wrapLine(l, columns); }).join('\n');
 }
 
-program.version('0.1.2') // automatically updated from package.json
+program.version('0.1.3') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')

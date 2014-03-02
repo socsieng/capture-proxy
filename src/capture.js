@@ -21,7 +21,17 @@ function listen (appRoot, port, options) {
 
     var combinePaths = function () {
         var args = Array.prototype.slice.call(arguments, 0);
-        return args.map(function (s) { return s.replace(/(^\/+|\/+$)/g, ''); }).join('/');
+        var path = args.map(function (s) {
+            return s.replace(/(^\/+|\/+$)/g, '');
+        }).filter(function (s) {
+            return !!s;
+        }).join('/');
+
+        if (!/^https?:\/\//i.test(path)) {
+            path = '/' + path;
+        }
+
+        return path;
     };
 
     var ensurePath = function (fullPath) {
@@ -95,12 +105,10 @@ function listen (appRoot, port, options) {
 
         // write request headers
         if (reqFileStream) {
-            reqFileStream.write('METHOD: ' + req.method + '\r\n\r\n');
+            reqFileStream.write(util.format('%s %s HTTP/%s\r\n', req.method, options.path, req.httpVersion));
 
             if (Object.getOwnPropertyNames(req.headers).length > 0) {
-                reqFileStream.write('HEADERS:\r\n');
                 writeDictionaryToStream(reqFileStream, req.headers);
-                reqFileStream.write('\r\n');
             }
         }
 
@@ -110,13 +118,12 @@ function listen (appRoot, port, options) {
             res.writeHead(response.statusCode, response.headers);
 
             if (resFileStream) {
+                resFileStream.write(util.format('HTTP/%s %s%s\r\n', response.httpVersion, response.statusCode, response.statusMessage ? ' ' + response.statusMessage : ''));
                 if (Object.getOwnPropertyNames(response.headers).length > 0) {
-                    resFileStream.write('HEADERS:\r\n');
                     writeDictionaryToStream(resFileStream, response.headers);
-                    resFileStream.write('\r\n');
                 }
-                resFileStream.write('BODY:\r\n');
 
+                resFileStream.write('\r\n');
                 response.pipe(resFileStream, { end: false });
             }
 
@@ -137,7 +144,7 @@ function listen (appRoot, port, options) {
 
         if (req.method === 'POST') {
             if (reqFileStream) {
-                reqFileStream.write('BODY:\r\n');
+                reqFileStream.write('\r\n');
                 req.pipe(reqFileStream);
             }
             req.pipe(request);
@@ -145,6 +152,9 @@ function listen (appRoot, port, options) {
                 request.end();
             });
         } else {
+            if (reqFileStream) {
+                reqFileStream.end('\r\n');
+            }
             request.end();
         }
     }
