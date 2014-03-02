@@ -48,7 +48,7 @@ function listen (appRoot, port, options) {
 
     var getFileName = function (root, req, type) {
         var fileName = combinePaths(req.url);
-        if (fileName === '/') {
+        if (fileName === path.sep) {
             fileName = 'root';
         }
         return path.resolve(root, util.format("%s-%s.%s", fileName.replace(/[\/=\?:&\\]/g, '_').replace(/^_/, ''), (new Date()).valueOf(), type.substring(0, 3)));
