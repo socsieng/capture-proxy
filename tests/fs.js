@@ -121,7 +121,7 @@ describe('file system', function () {
                     { statusCode: 200, headers: {}, data: 'OK' },
                     function (req, res) {
                         expect(fs.createWriteStream.callCount).to.be(1);
-                        expect(fs.createWriteStream.args[0][0]).to.match(/\\root-\d+\.res/);
+                        expect(fs.createWriteStream.args[0][0]).to.match(/[\\\/]root-\d+\.res/);
                         done();
                     });
             });
@@ -132,7 +132,7 @@ describe('file system', function () {
                     { statusCode: 200, headers: {}, data: 'OK' },
                     function (req, res) {
                         expect(fs.createWriteStream.callCount).to.be(1);
-                        expect(fs.createWriteStream.args[0][0]).to.match(/\\something-\d+\.res/);
+                        expect(fs.createWriteStream.args[0][0]).to.match(/[\\\/]something-\d+\.res/);
                         done();
                     });
             });
@@ -143,7 +143,7 @@ describe('file system', function () {
                     { statusCode: 200, headers: {}, data: 'OK' },
                     function (req, res) {
                         expect(fs.createWriteStream.callCount).to.be(1);
-                        expect(fs.createWriteStream.args[0][0]).to.match(/\\something_else-\d+\.res/);
+                        expect(fs.createWriteStream.args[0][0]).to.match(/[\\\/]something_else-\d+\.res/);
                         done();
                     });
             });
@@ -154,7 +154,7 @@ describe('file system', function () {
                     { statusCode: 200, headers: {}, data: 'OK' },
                     function (req, res) {
                         expect(fs.createWriteStream.callCount).to.be(1);
-                        expect(fs.createWriteStream.args[0][0]).to.match(/\\something_here_there_and_everywhere-\d+\.res/);
+                        expect(fs.createWriteStream.args[0][0]).to.match(/[\\\/]something_here_there_and_everywhere-\d+\.res/);
                         done();
                     });
             });
