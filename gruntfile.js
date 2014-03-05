@@ -78,5 +78,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['jshint']);
     grunt.registerTask('test', ['mochaTest']);
-    grunt.registerTask('build', ['jshint', 'mochaTest']);
+    grunt.registerTask('build', ['jshint', 'test']);
+    grunt.registerTask('publish', ['command-version','build']);
 };

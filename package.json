@@ -1,13 +1,13 @@
 {
   "name": "capture-proxy",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A http proxy that can be used to intercept http requests and persist the request and response payloads.",
   "main": "index.js",
   "bin": {
     "capture": "./bin/capture"
   },
   "scripts": {
-    "prepublish": "grunt command-version",
+    "prepublish": "grunt publish",
     "test": "grunt build"
   },
   "keywords": [
