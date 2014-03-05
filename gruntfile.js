@@ -2,7 +2,7 @@
 
 module.exports = function (grunt) {
     grunt.initConfig({
-        src: ['gruntfile.js', 'bin/capture', 'src/**/*.js'],
+        src: ['gruntfile.js', 'index.js', 'bin/capture', 'src/**/*.js'],
         tests: 'tests/**/*.js',
         all: ['<%=src%>', '<%=tests%>'],
 

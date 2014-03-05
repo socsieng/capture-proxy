@@ -2,6 +2,7 @@
 
 var program = require('../lib/commander/');
 var capture = require('../index');
+var fs = require('fs');
 
 function wrapLine(str, columns) {
     var wordExp = /([\S]+)(\s*)/g, space = /\s*$/, word, currentLine = '', lines = [];
@@ -49,7 +50,9 @@ function wrapText(str, columns) {
     return lines.map(function (l) { return wrapLine(l, columns); }).join('\n');
 }
 
-program.version('0.1.6') // automatically updated from package.json
+var executed = false;
+
+program.version('0.2.1') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
@@ -59,6 +62,19 @@ program.version('0.1.6') // automatically updated from package.json
     .option('-z, --zip', 'Enable compression. By default the `accept-encoding` header is removed')
     .option('-v, --verbose', 'Output requests and responses')
     ;
+
+program.command('replay')
+    .usage('<file> [options]')
+    .description('Re-issue a request from a previously recorded file')
+    .option('-H, --headers', 'Output headers')
+    .option('-k, --insecure', 'Allow connections to SSL sites without valid certs')
+    .action(function (file, cmd) {
+        capture.replay(fs.readFileSync(file, 'utf-8'), {
+            outputHeaders: cmd.headers,
+            insecure: cmd.insecure || program.insecure
+        });
+        executed = true;
+    });
 
 // use if wrap method for commander is available
 if (program.wrap) {
@@ -76,18 +92,20 @@ program.on('--help', function () {
 
 program.parse(process.argv);
 
-var applicationRoot = program.args[0];
+if (!executed) {
+    var applicationRoot = program.args[0];
 
-if (!applicationRoot) {
-    console.error('No <applicationRoot> specified.');
-    program.help();
+    if (!applicationRoot) {
+        console.error('No <applicationRoot> specified.');
+        program.help();
+    }
+
+    capture.listen(applicationRoot, program.port, {
+        response: program.response,
+        request: program.request,
+        output: require('path').resolve(process.cwd(), program.output),
+        insecure: program.insecure,
+        zip: program.zip,
+        verbose: program.verbose
+    });
 }
-
-capture.listen(applicationRoot, program.port, {
-    response: program.response,
-    request: program.request,
-    output: require('path').resolve(process.cwd(), program.output),
-    insecure: program.insecure,
-    zip: program.zip,
-    verbose: program.verbose
-});
