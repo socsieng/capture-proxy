@@ -57,6 +57,7 @@ program.version('0.1.5') // automatically updated from package.json
     .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output')
     .option('-k, --insecure', 'Allow connections to SSL sites without valid certs')
     .option('-z, --zip', 'Enable compression. By default the `accept-encoding` header is removed')
+    .option('-v, --verbose', 'Output requests and responses')
     ;
 
 // use if wrap method for commander is available
@@ -87,5 +88,6 @@ capture.listen(applicationRoot, program.port, {
     request: program.request,
     output: require('path').resolve(process.cwd(), program.output),
     insecure: program.insecure,
-    zip: program.zip
+    zip: program.zip,
+    verbose: program.verbose
 });

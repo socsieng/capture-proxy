@@ -6,9 +6,11 @@ var path = require('path');
 
 function listen (appRoot, port, options) {
     var log = null;
+    options = options || {};
+
     var allowInsecure = options.insecure;
     var enableZip = options.zip;
-    options = options || {};
+    var verbose = options.verbose;
 
     if (options.silent) {
         log = function () {};
@@ -48,7 +50,7 @@ function listen (appRoot, port, options) {
 
     var getFileName = function (root, req, type) {
         var fileName = combinePaths(req.url);
-        if (fileName === path.sep) {
+        if (fileName === '/') {
             fileName = 'root';
         }
         return path.resolve(root, util.format("%s-%s.%s", fileName.replace(/[\/=\?:&\\]/g, '_').replace(/^_/, ''), (new Date()).valueOf(), type.substring(0, 3)));
@@ -73,13 +75,28 @@ function listen (appRoot, port, options) {
     var client = baseUri.protocol === 'https:' ? https : http;
 
     var requestHandler = function requestHandler (req, res) {
-        var reqStream = null, resStream = null;
+        var reqStream = null, resStream = null, freqStream = null, fresStream = null;
+
+        if (verbose || options.response || options.request) {
+            reqStream = new require('stream').PassThrough();
+            resStream = new require('stream').PassThrough();
+        }
+
         if (options.response || options.request) {
-            resStream = fs.createWriteStream(getFileName(outputLocation, req, 'response'));
+            fresStream = fs.createWriteStream(getFileName(outputLocation, req, 'response'));
+            resStream.pipe(fresStream);
         }
         if (options.request) {
-            reqStream = fs.createWriteStream(getFileName(outputLocation, req, 'request'));
+            freqStream = fs.createWriteStream(getFileName(outputLocation, req, 'request'));
+            reqStream.pipe(freqStream);
         }
+
+        // verbose mode
+        if (verbose && !options.silent) {
+            reqStream.pipe(process.stdout, { end: false });
+            resStream.pipe(process.stdout, { end: false });
+        }
+
         routeRequest(req, res, reqStream, resStream);
     };
 
@@ -115,6 +132,7 @@ function listen (appRoot, port, options) {
             }
         }
 
+        log(util.format('%s - %s', req.method, requestUrl));
         var request = client.request(options, function (response) {
             log(util.format('%s - %s', response.statusCode, requestUrl));
 
