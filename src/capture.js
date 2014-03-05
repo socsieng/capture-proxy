@@ -125,7 +125,11 @@ function listen (appRoot, port, options) {
 
         // write request headers
         if (reqFileStream) {
-            reqFileStream.write(util.format('%s %s HTTP/%s\r\n', req.method, options.path, req.httpVersion));
+            reqFileStream.write(
+                util.format('%s %s HTTP/%s\r\n',
+                    req.method,
+                    combinePaths(baseUri.protocol + '//' + options.hostname + (options.port ? ':' + options.port : ''), options.path),
+                    req.httpVersion));
 
             if (Object.getOwnPropertyNames(req.headers).length > 0) {
                 writeDictionaryToStream(reqFileStream, req.headers);
