@@ -21,8 +21,9 @@ function parseRequest(payload) {
             version = headerMatch[3];
             headers = head.substring(headerMatch.index + headerMatch[0].length)
                 .split(/\r?\n/)
-                .map(function (h) { return h.split(/\s?:\s?/); })
-                .reduce(function (obj, a) { obj[a[0]] = a[1]; return obj; }, {});
+                .map(function (h) { return /^([^\s:]+)\s?:\s?(.*)$/.exec(h); })
+                .filter(function (m) { return m; })
+                .reduce(function (obj, a) { obj[a[1]] = a[2]; return obj; }, {});
 
             return {
                 method: method,

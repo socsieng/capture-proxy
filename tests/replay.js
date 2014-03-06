@@ -26,7 +26,7 @@ describe('replay', function () {
         });
 
         it('should parse a POST request with data', function () {
-            var payload = 'POST http://localhost/ HTTP/1.1\r\nuser-agent: curl/7.30.0\r\nhost: es.dev1.core.esb.cba\r\naccept: */*\r\n\r\nhello=world';
+            var payload = 'POST http://localhost/ HTTP/1.1\r\nuser-agent: curl/7.30.0\r\nhost: es.dev1.core.esb.cba:8000\r\naccept: */*\r\n\r\nhello=world';
             var r = replay.parseRequest(payload);
 
             expect(r).to.eql({
@@ -35,7 +35,7 @@ describe('replay', function () {
                 httpVersion: '1.1',
                 headers: {
                     'user-agent': 'curl/7.30.0',
-                    'host': 'es.dev1.core.esb.cba',
+                    'host': 'es.dev1.core.esb.cba:8000',
                     'accept': '*/*'
                 },
                 data: 'hello=world'
