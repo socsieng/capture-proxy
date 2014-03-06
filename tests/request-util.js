@@ -108,6 +108,6 @@ function makeRequest(httpRequest, httpResponse, complete) {
 }
 
 module.exports = {
-	listen: listen,
-	makeRequest: makeRequest
+    listen: listen,
+    makeRequest: makeRequest
 };

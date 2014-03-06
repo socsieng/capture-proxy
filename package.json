@@ -20,8 +20,7 @@
     "url": "https://github.com/socsieng/capture-proxy.git"
   },
   "license": "ISC",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "sinon": "^1.8.2",
     "expect.js": "^0.3.1",
@@ -30,6 +29,7 @@
     "grunt-contrib-jshint": "^0.8.0",
     "grunt-mocha-test": "^0.9.3",
     "grunt-contrib-watch": "^0.5.3",
-    "grunt-cli": "^0.1.13"
+    "grunt-cli": "^0.1.13",
+    "grunt-lintspaces": "^0.4.1"
   }
 }
