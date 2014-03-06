@@ -95,6 +95,13 @@ function listen (appRoot, port, options) {
         if (verbose && !options.silent) {
             reqStream.pipe(process.stdout, { end: false });
             resStream.pipe(process.stdout, { end: false });
+
+            reqStream.on('finish', function () {
+                process.stdout.write('\r\n');
+            });
+            resStream.on('finish', function () {
+                process.stdout.write('\r\n');
+            });
         }
 
         routeRequest(req, res, reqStream, resStream);
@@ -136,9 +143,9 @@ function listen (appRoot, port, options) {
             }
         }
 
-        log(util.format('%s - %s', req.method, requestUrl));
+        log(util.format('\x1B[33m%s - %s\x1B[39m', req.method, requestUrl));
         var request = client.request(options, function (response) {
-            log(util.format('%s - %s', response.statusCode, requestUrl));
+            log(util.format('\x1B[32m%s - %s\x1B[39m', response.statusCode, requestUrl));
 
             res.writeHead(response.statusCode, response.headers);
 
@@ -162,8 +169,9 @@ function listen (appRoot, port, options) {
         });
 
         request.on('error', function (error) {
-            log(util.format('%s - %s', 500, requestUrl));
-            res.writeHead(500);
+            log(util.format('\x1B[31m%s - %s\x1B[39m', 500, requestUrl));
+            res.writeHead(500, {'Content-Type': 'text/plain'});
+            res.write(util.format('Request options:\r\n%j\r\n\r\n', options));
             res.end(error ? error.stack : 'Error executing request');
         });
 

@@ -54,14 +54,24 @@ function replay(payload, opts, callback) {
         hostname: url.hostname,
         port: url.port,
         method: rq.method,
-        path: rq.url,
+        path: url.path,
         headers: rq.headers,
         httpVersion: rq.httpVersion,
         rejectUnauthorized: !opts.insecure
     };
 
+    if (opts.verbose && opts.outputHeaders) {
+        console.log('%s %s HTTP/%s',
+            rq.method,
+            rq.url,
+            options.httpVersion);
+
+        writeDictionaryToStream(process.stdout, rq.headers);
+    }
+
     var req = client.request(options, function (response) {
         if (opts.outputHeaders) {
+            console.log('HTTP/%s %s%s', response.httpVersion, response.statusCode, response.statusMessage ? ' ' + response.statusMessage : '');
             writeDictionaryToStream(process.stdout, response.headers);
             console.log('');
         }
@@ -77,7 +87,14 @@ function replay(payload, opts, callback) {
         console.log('Error: %s', error ? error.stack : 'Error executing request');
     });
 
-    req.end(rq.data);
+    if (rq.data) {
+        req.end(rq.data);
+        if (opts.verbose) {
+            console.log('\r\n%s\r\n', rq.data);
+        }
+    } else {
+        req.end();
+    }
 }
 
 module.exports = {

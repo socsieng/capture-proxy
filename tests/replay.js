@@ -56,7 +56,7 @@ describe('replay', function () {
                 hostname: 'localhost',
                 port: null,
                 method: 'GET',
-                path: 'http://localhost/',
+                path: '/',
                 headers: {
                     'user-agent': 'curl/7.30.0',
                     'host': 'es.dev1.core.esb.cba',
@@ -81,7 +81,7 @@ describe('replay', function () {
                 hostname: 'localhost',
                 port: null,
                 method: 'POST',
-                path: 'https://localhost/',
+                path: '/',
                 headers: {
                     'user-agent': 'curl/7.30.0',
                     'host': 'es.dev1.core.esb.cba',

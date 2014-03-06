@@ -52,7 +52,7 @@ function wrapText(str, columns) {
 
 var executed = false;
 
-program.version('0.2.1') // automatically updated from package.json
+program.version('0.2.2') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
     .option('-r, --response', 'Save responses')
@@ -68,10 +68,12 @@ program.command('replay')
     .description('Re-issue a request from a previously recorded file')
     .option('-H, --headers', 'Output headers')
     .option('-k, --insecure', 'Allow connections to SSL sites without valid certs')
+    .option('-v, --verbose', 'Output requests')
     .action(function (file, cmd) {
         capture.replay(fs.readFileSync(file, 'utf-8'), {
             outputHeaders: cmd.headers,
-            insecure: cmd.insecure || program.insecure
+            insecure: cmd.insecure || program.insecure,
+            verbose: cmd.verbose || program.verbose
         });
         executed = true;
     });

@@ -24,27 +24,36 @@ $ capture <applicationRoot> [options]
 
 ```sh
 $ capture -h
-#
-#  Usage: capture <applicationRoot> [options]
-#
-#  Options:
-#
-#    -h, --help               output usage information
-#    -V, --version            output the version number
-#    -p, --port <portNumber>  Port number to start listening on [8000]
-#    -r, --response           Save responses
-#    -R, --request            Save requests and responses
-#    -o, --output [location]  When request or response capture is enabled, save
-#                             files to this folder [./output]
-#    -k, --insecure           Allow connections to SSL sites without valid certs
-#    -z, --zip                Enable compression. By default the
-#                             `accept-encoding` header is removed
-#
-#Capture is a http proxy that can be used to intercept http requests and persist
-#the request and response payloads.
-#
-#<applicationRoot> is the mounting point for the proxy.
-#(e.g. http://my.host.com/application/root/)
+```
+
+```
+  Usage: capture <applicationRoot> [options]
+
+  Commands:
+
+    replay [options]       Re-issue a request from a previously recorded
+                           file
+
+  Options:
+
+    -h, --help               output usage information
+    -V, --version            output the version number
+    -p, --port <portNumber>  Port number to start listening on [8000]
+    -r, --response           Save responses
+    -R, --request            Save requests and responses
+    -o, --output [location]  When request or response capture is enabled,
+                             save files to this folder [./output]
+    -k, --insecure           Allow connections to SSL sites without valid
+                             certs
+    -z, --zip                Enable compression. By default the
+                             `accept-encoding` header is removed
+    -v, --verbose            Output requests and responses
+
+Capture is a http proxy that can be used to intercept http requests and
+persist the request and response payloads.
+
+<applicationRoot> is the mounting point for the proxy. (e.g.
+http://my.host.com/application/root/)
 ```
 
 ### Example
