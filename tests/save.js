@@ -31,7 +31,7 @@ describe('save', function () {
 describe('load', function () {
     beforeEach(function () {
         sinon.stub(fs, 'readFileSync').returns('hello world');
-        var exists = sinon.stub(fs, 'exists');
+        var exists = sinon.stub(fs, 'existsSync');
         exists.withArgs('newFile').returns(false);
         exists.withArgs('localFile').returns(true);
         exists.withArgs('savedFile').returns(false);
@@ -40,7 +40,7 @@ describe('load', function () {
 
     afterEach(function () {
         fs.readFileSync.restore();
-        fs.exists.restore();
+        fs.existsSync.restore();
     });
 
     it('should return null if no file exists', function () {
