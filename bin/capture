@@ -64,7 +64,7 @@ program.version('0.2.4') // automatically updated from package.json
     ;
 
 program.command('replay')
-    .usage('<file> [options]')
+    .usage('<file|alias> [options]')
     .description('Re-issue a request from a previously recorded file')
     .option('-H, --headers', 'Output headers')
     .option('-k, --insecure', 'Allow connections to SSL sites without valid certs')

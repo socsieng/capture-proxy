@@ -13,7 +13,10 @@
   "keywords": [
     "capture",
     "proxy",
-    "curl"
+    "curl",
+    "replay",
+    "HttpRequest",
+    "HttpResponse"
   ],
   "author": "socsieng",
   "repository": {
