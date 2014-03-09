@@ -3,6 +3,7 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var path = require('path');
+var fsUtil = require('./util/fs');
 
 function listen (appRoot, port, options) {
     var log = null;
@@ -34,18 +35,6 @@ function listen (appRoot, port, options) {
         }
 
         return path;
-    };
-
-    var ensurePath = function (fullPath) {
-        var parts = fullPath.split(path.sep);
-        for (var i = 1; i <= parts.length; i++) {
-            var folder = parts.slice(0, i).join(path.sep);
-            if (folder) {
-                if (!fs.existsSync(folder)) {
-                    fs.mkdirSync(folder);
-                }
-            }
-        }
     };
 
     var getFileName = function (root, req, type) {
@@ -194,7 +183,7 @@ function listen (appRoot, port, options) {
 
     // create output folder
     if (options.response || options.request) {
-        ensurePath(outputLocation);
+        fsUtil.ensurePath(outputLocation);
     }
 
     proxy.listen(port, 'localhost');
