@@ -42,7 +42,7 @@ function listen (appRoot, port, options) {
         if (fileName === '/') {
             fileName = 'root';
         }
-        return path.resolve(root, util.format("%s-%s.%s", fileName.replace(/[\/=\?:&\\]/g, '_').replace(/^_/, ''), (new Date()).valueOf(), type.substring(0, 3)));
+        return path.resolve(root, util.format("%s-%s.%s", fileName.replace(/^([^?]*).*/, '$1').replace(/[\/=\?:&\\]/g, '_').replace(/^_/, ''), (new Date()).valueOf(), type.substring(0, 3)));
     };
 
     var writeDictionaryToStream = function (stream, dict) {

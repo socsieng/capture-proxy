@@ -148,13 +148,13 @@ describe('file system', function () {
                     });
             });
 
-            it('should create file names with query strings', function (done) {
+            it('should create file names discarding query strings', function (done) {
                 reqUtil.makeRequest(
                     { method: 'GET', url: '/something?here=there&and_everywhere' },
                     { statusCode: 200, headers: {}, data: 'OK' },
                     function (req, res) {
                         expect(fs.createWriteStream.callCount).to.be(1);
-                        expect(fs.createWriteStream.args[0][0]).to.match(/[\\\/]something_here_there_and_everywhere-\d+\.res/);
+                        expect(fs.createWriteStream.args[0][0]).to.match(/[\\\/]something-\d+\.res/);
                         done();
                     });
             });
