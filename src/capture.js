@@ -164,7 +164,7 @@ function listen (appRoot, port, options) {
             res.end(error ? error.stack : 'Error executing request');
         });
 
-        if (req.method === 'POST') {
+        if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
             if (reqFileStream) {
                 reqFileStream.write('\r\n');
                 req.pipe(reqFileStream);
