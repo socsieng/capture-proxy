@@ -51,22 +51,12 @@ module.exports = function (grunt) {
                 files: 'package.json',
                 tasks: ['command-version']
             }
-        },
-
-        lintspaces: {
-            all: {
-                src: '<%=all%>',
-                options: {
-                    editorconfig: '.editorconfig'
-                }
-            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
-    grunt.loadNpmTasks('grunt-lintspaces');
 
     grunt.registerTask('command-version', 'Updates the version of command line interface from package.json file', function() {
         var commandFile = 'bin/capture';
@@ -86,7 +76,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['lintspaces', 'jshint']);
+    grunt.registerTask('default', ['jshint']);
     grunt.registerTask('test', ['mochaTest']);
     grunt.registerTask('build', ['default', 'test']);
     grunt.registerTask('publish', ['command-version','build']);
