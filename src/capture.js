@@ -32,7 +32,7 @@ function listen (appRoot, port, options) {
 
         // If the final argument ended with a trailing slash, return it.
         var last = args.slice(-1)[0];
-        if (last.slice(-1) === '/') {
+        if (last[last.length - 1] === '/') {
             path += '/';
         }
 
