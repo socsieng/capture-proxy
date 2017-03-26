@@ -45,6 +45,10 @@ function listen (appRoot, port, options) {
 
     var getFileName = function (root, req, type) {
         var fileName = combinePaths(req.url);
+
+        // remove double `/`
+        fileName = fileName.replace(/\/+$/g, '/');
+
         if (fileName === '/') {
             fileName = 'root';
         }
