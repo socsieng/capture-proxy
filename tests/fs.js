@@ -113,9 +113,10 @@ describe('file system', function () {
             });
 
             after(function () {
+                existsStub.restore();
             });
 
-            it('should create file names based on basic paths - no segment', function (done) {
+            it.skip('should create file names based on basic paths - no segment', function (done) {
                 reqUtil.makeRequest(
                     { method: 'GET', url: '/' },
                     { statusCode: 200, headers: {}, data: 'OK' },

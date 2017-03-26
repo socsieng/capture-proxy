@@ -74,6 +74,34 @@ describe('request/response', function () {
                         done();
                     });
             });
+
+            it('should handle a GET request with a trailing slash', function(done) {
+                reqUtil.makeRequest(
+                    { method: 'GET', url: '/something/', headers: { a: '1'} },
+                    { statusCode: 200, headers: { b: '2' }, data: 'OK' },
+                    function (req) {
+                        var rq = req.toString();
+
+                        expect(rq).to.be('GET https://my.host.com/root/something/ HTTP/1.1\r\na: 1\r\n\r\n');
+
+                        done();
+                    }
+                );
+            });
+
+            it('should handle a GET request for a lone slash', function(done) {
+                reqUtil.makeRequest(
+                    { method: 'GET', url: '/', headers: { a: '1'} },
+                    { statusCode: 200, headers: { b: '2' }, data: 'OK' },
+                    function (req) {
+                        var rq = req.toString();
+
+                        expect(rq).to.be('GET https://my.host.com/root/ HTTP/1.1\r\na: 1\r\n\r\n');
+
+                        done();
+                    }
+                );
+            });
         });
 
         describe('POST', function () {
