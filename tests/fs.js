@@ -116,7 +116,7 @@ describe('file system', function () {
                 existsStub.restore();
             });
 
-            it.skip('should create file names based on basic paths - no segment', function (done) {
+            it('should create file names based on basic paths - no segment', function (done) {
                 reqUtil.makeRequest(
                     { method: 'GET', url: '/' },
                     { statusCode: 200, headers: {}, data: 'OK' },
