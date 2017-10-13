@@ -52,9 +52,10 @@ function wrapText(str, columns) {
 
 var executed = false;
 
-program.version('0.2.6') // automatically updated from package.json
+program.version('0.2.7') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
+    .option('-a, --ashost <hostName>', 'Set the host header on the proxied request. By default the `host` is based on the application root')
     .option('-r, --response', 'Save responses')
     .option('-R, --request', 'Save requests and responses')
     .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output')
@@ -114,6 +115,7 @@ if (!executed) {
     capture.listen(applicationRoot, program.port, {
         response: program.response,
         request: program.request,
+        hostname: program.ashost,
         output: require('path').resolve(process.cwd(), program.output),
         insecure: program.insecure,
         zip: program.zip,

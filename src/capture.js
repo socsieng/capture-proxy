@@ -21,6 +21,7 @@ function listen (appRoot, port, options) {
 
     var baseUri = require('url').parse(appRoot);
     var outputLocation = null;
+    var hostname = options.hostname || baseUri.host;
 
     var combinePaths = function () {
         var args = Array.prototype.slice.call(arguments, 0);
@@ -125,7 +126,7 @@ function listen (appRoot, port, options) {
             }
 
             if (options.headers.host) {
-                options.headers.host = baseUri.host;
+                options.headers.host = hostname;
             }
         }
 

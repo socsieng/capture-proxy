@@ -185,5 +185,33 @@ describe('connect', function () {
                 expect(options.headers).to.have.property('other');
             });
         });
+
+        describe('hostname', function () {
+            it('should retain the `host` header as is by default', function () {
+                listen('http://my.host.com', port, {});
+
+                triggerRequest({
+                    'host': 'my.host.com'
+                });
+
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('headers');
+                expect(options.headers).to.have.property('host');
+                expect(options.headers.host).to.be('my.host.com');
+            });
+
+            it('should override the `host` header when specified as an option', function () {
+                listen('http://my.host.com', port, { hostname: 'overridden.host.com' });
+
+                triggerRequest({
+                    'host': 'my.host.com'
+                });
+
+                var options = http.request.args[0][0];
+                expect(options).to.have.property('headers');
+                expect(options.headers).to.have.property('host');
+                expect(options.headers.host).to.be('overridden.host.com');
+            });
+        });
     });
 });

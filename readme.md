@@ -35,6 +35,7 @@ Capture HttpRequests and HttpResponses using the capture command.
     -p, --port <portNumber>  Port number to start listening on [8000]
     -r, --response           Save responses
     -R, --request            Save requests and responses
+    -a, --ashost <hostName>  Set the host header on the proxied request. By default the `host` is based on the application root
     -o, --output [location]  When request or response capture is enabled,
                              save files to this folder [./output]
     -k, --insecure           Allow connections to SSL sites without valid
