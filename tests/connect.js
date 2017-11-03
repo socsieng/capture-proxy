@@ -72,6 +72,16 @@ describe('connect', function () {
         }).to.throwException();
     });
 
+    it('should bind to localhost by default', function () {
+        listen('http://my.host.com', port, { });
+        expect(proxy.listen.args[0]).to.eql([port, 'localhost']);
+    });
+
+    it('should bind to all ports when requested', function () {
+        listen('http://my.host.com', port, { bindall: true });
+        expect(proxy.listen.args[0]).to.eql([port, '0.0.0.0']);
+    });
+
     describe('requests', function () {
         function triggerRequest (requestHeaders) {
             expect(http.createServer.args[0][0]).to.be.a(Function);

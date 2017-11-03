@@ -196,8 +196,9 @@ function listen (appRoot, port, options) {
         fsUtil.ensurePath(outputLocation);
     }
 
-    proxy.listen(port, 'localhost');
-    log('Proxy running on http://localhost:%s/ -> %s', port, appRoot);
+    var bindHost = options.bindall ? '0.0.0.0' : 'localhost';
+    proxy.listen(port, bindHost);
+    log('Proxy running on http://%s:%s/ -> %s', bindHost, port, appRoot);
 
     return proxy;
 }
