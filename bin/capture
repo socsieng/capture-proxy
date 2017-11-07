@@ -45,16 +45,16 @@ function wrapText(str, columns) {
     if (!str) {
         return str;
     }
-
     var lines = str.split('\n');
     return lines.map(function (l) { return wrapLine(l, columns); }).join('\n');
 }
 
 var executed = false;
 
-program.version('0.2.6') // automatically updated from package.json
+program.version('0.2.7') // automatically updated from package.json
     .usage('<applicationRoot> [options]')
     .option('-p, --port <portNumber>', 'Port number to start listening on [8000]', '8000')
+    .option('-B, --bindall', 'Bind to all interfaces (not just localhost)')
     .option('-r, --response', 'Save responses')
     .option('-R, --request', 'Save requests and responses')
     .option('-o, --output [location]', 'When request or response capture is enabled, save files to this folder [./output]', './output')
@@ -112,6 +112,7 @@ if (!executed) {
     }
 
     capture.listen(applicationRoot, program.port, {
+        bindall: program.bindall,
         response: program.response,
         request: program.request,
         output: require('path').resolve(process.cwd(), program.output),
